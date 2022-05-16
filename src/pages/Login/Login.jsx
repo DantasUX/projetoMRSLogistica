@@ -4,20 +4,51 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import styled from 'styled-components'
 import Container from '@mui/material/Container';
+import Logo from '../../img/logo.png'
 
 import { AuthContext } from "../../contexts/auth";
 
+
+const SCLogo = styled.div`
+    width: 100% ;
+    display: flex ;
+    align-items: center ;
+    justify-content: center ;
+    margin-top: -5rem ;
+    img{
+        width: 10rem ;
+    }
+`
 const SCBtnSubmit = styled(Button)`
     margin-top: 50px !important;
     height: 3rem !important;
-    background: linear-gradient(45deg, rgba(21,45,130,1) 0%, rgba(135,48,121,1) 100% );
+    background: #A30201 !important;
 `
 const SCContainer = styled(Container)`
     padding: 2rem ;
     border-radius: 8px ;
     box-shadow: 0px 5px 14px -5px black;
     background-color: #fff ;
-    margin-top: 5rem ;
+    margin-top: 10rem ;
+
+    animation: go-back 2s;
+
+
+    @media (max-width: 650px){
+        width: 80% !important;
+    }
+    @keyframes go-back {
+    0% {
+        transform: translateY(100px);
+        opacity: 0 ;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+`
+const SCContainer2 = styled(SCContainer)`
 `
 const SCTitle = styled.h1`
     text-align: center ;
@@ -28,10 +59,10 @@ const SCTitle = styled.h1`
 const SCCadastrar = styled.h5`
     text-align: center ;
     color: #3B3B3B ;
-
     a{
-        color:  rgba(135,48,121,1);
+        color:  #A30201;
         text-decoration: none ;
+        cursor: pointer ;
     }
 
 `
@@ -71,7 +102,8 @@ function FormLogin() {
     if (register) {
         return (
             <SCContainer maxWidth="sm">
-                <SCTitle>Login do Sistema</SCTitle>
+                <SCLogo> <img src={Logo}></img></SCLogo>
+                <SCTitle>Grifinória</SCTitle>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         type="email"
@@ -96,13 +128,14 @@ function FormLogin() {
                     />
                     <SCBtnSubmit variant="contained" size="large" type="submet" fullWidth >Entrar</SCBtnSubmit>
                 </form>
-                <SCCadastrar>Quero me <button onClick={() => setRegister(false)}> cadastrar </button> </SCCadastrar>
+                <SCCadastrar>Quero me <a onClick={() => setRegister(false)}> cadastrar </a> </SCCadastrar>
             </SCContainer>
         )
     } else {
         return (
-            <SCContainer maxWidth="sm">
-                <SCTitle>Fça seu Cadastro</SCTitle>
+            <SCContainer2 maxWidth="sm">
+                <SCLogo> <img src={Logo} /></SCLogo>
+                <SCTitle>Faça seu Cadastro</SCTitle>
                 <form onSubmit={registerSubmit}>
                     <TextField
                         type="email"
@@ -139,8 +172,8 @@ function FormLogin() {
 
                     <SCBtnSubmit variant="contained" size="large" type="submet" fullWidth >Cadastrar</SCBtnSubmit>
                 </form>
-                <SCCadastrar><button onClick={() => setRegister(true)}> cancelar </button> </SCCadastrar>
-            </SCContainer>
+                <SCCadastrar><a onClick={() => setRegister(true)}> cancelar </a> </SCCadastrar>
+            </SCContainer2>
         )
     }
 }

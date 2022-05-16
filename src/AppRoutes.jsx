@@ -9,7 +9,8 @@ import {
 
 import Login from './pages/Login/Login'
 import Home from './pages/home/Home'
-import Magia from './pages/magia/Magia'
+import CadastrarMagia from './pages/cadastrarMagia/Magia'
+import InfoMagia from "./pages/infoMagia/infoMagia";
 
 import { AuthProvider, AuthContext } from './contexts/auth'
 import { Children } from "react";
@@ -38,7 +39,9 @@ const AppRoutes = () => {
                     <Route exact path="/login" element={<Login />} />
                     <Route exact path="/" element={<Private><Home /></Private>} />
                     <Route exact path="/home" element={<Private><Home /></Private>} />
-                    <Route exact path="/magia" element={<Private><Magia /></Private>} />
+                    <Route exact path="/magia" element={<Private><CadastrarMagia /></Private>} />
+                    <Route exact path="/infoMagia" element={<Private><InfoMagia /></Private>} />
+
                 </Routes>
             </AuthProvider>
         </Router>

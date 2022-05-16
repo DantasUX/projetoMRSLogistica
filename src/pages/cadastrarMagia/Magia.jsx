@@ -3,13 +3,8 @@ import { AuthContext } from "../../contexts/auth";
 import styled from 'styled-components'
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { AiFillDelete } from 'react-icons/ai';
-import { AiFillInfoCircle } from 'react-icons/ai';
+import TextField from '@mui/material/TextField';
 
 
 
@@ -32,13 +27,17 @@ const SCLoading = styled.div`
 `
 
 const SCContainer = styled(Container)`
-    color: #fff ;
     padding: 2rem ;
     border-radius: 8px ;
-    background-color: rgba(0,0,0,0.5);
+    box-shadow: 0px 5px 14px -5px black;
+    background-color: #fff ;
+    margin-top: 10rem ;
+
     animation: go-back 2s;
-    @media (max-width: 1280px){
-        width: 85% !important;
+
+
+    @media (max-width: 650px){
+        width: 80% !important;
     }
     @keyframes go-back {
     0% {
@@ -97,16 +96,6 @@ const SCListCards = styled.div`
     }
 
 `
-const SCCard = styled(Card)`
-    display: flex ;
-    flex-wrap: wrap ;
-    margin: 1rem 0 ;
-    color: #fff;
-    box-shadow: 0px 4px 10px -2px black !important;
-    width: 350px ;
-
-
-`
 const SCBtnSubmit = styled(Button)`
     height: 3rem !important;
     height: 3rem !important;
@@ -120,36 +109,20 @@ const SCBtnSubmit = styled(Button)`
     }
 
 `
-const SCMenuCard = styled(CardActions)`
-    width: 100% ;
-    background-color: #A30201 ;
-    color: #fff !important ;
-    border-top: 5px solid #F9AA01 ;
-    display: flex ;
-    justify-content: flex-end ;
-    a{
-        text-decoration: none ;
-        color: #fff ;
-        display: flex ;
-        align-items: baseline ;
-
-        span{
-            margin-left: 5px ;
-        }
-    }
-    a:hover{
-        opacity: 0.5 ;
-    }
-
+const SCBtnSubmitCadastro = styled(SCBtnSubmit)`
+    margin: 0 !important ;
+    margin-top: 2rem !important ;
 
 `
 
-
-function Home() {
+function CadastrarMagia() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     const { authenticated, logout } = useContext(AuthContext);
+
+    const [nomeMagia, setNomeMagia] = useState("");
+    const [typoMagia, setTypoMagia] = useState("");
 
     const handleLogout = () => {
         logout();
@@ -187,43 +160,44 @@ function Home() {
                     <SCContainerMenu>
                         <h1>Grifinoria</h1>
                         <div>
-                            <SCBtnSubmit href="/magia">Cadastrar Magina</SCBtnSubmit>
+                            <SCBtnSubmit href="/home">Home</SCBtnSubmit>
                             <SCBtnSubmit onClick={handleLogout}>sair</SCBtnSubmit>
                         </div>
                     </SCContainerMenu>
                 </SCMenu>
-                <SCContainer>
-                    <h2> Lista de Magias</h2>
+                <SCContainer maxWidth="sm">
+                    <h2> Cadastre Uma Magias</h2>
                     <Divider />
-                    <SCListCards>
+                    <form >
 
-                        {items.map(item => (
-                            <SCCard sx={{ maxWidth: 345 }} key={item.id}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {item.name}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.type}
-                                    </Typography>
-                                </CardContent>
-                                <SCMenuCard>
-                                    <a size="small"><AiFillDelete /><span>Excluir</span></a>
-                                    <a size="small" href="/infoMagia"> <AiFillInfoCircle /><span>Informações</span></a>
-                                </SCMenuCard>
-                            </SCCard>
-                        ))}
-                    </SCListCards>
+                        <TextField
+                            type="text"
+                            name="user"
+                            id="eamil-registro"
+                            label="Nome da Magia"
+                            variant="outlined"
+                            fullWidth margin="normal"
+                            value={nomeMagia}
+                            onChange={(e) => setNomeMagia(e.target.value)}
+                        />
+                        <TextField
+                            type="text"
+                            name="tipoMagina"
+                            id="nome-registro"
+                            label="Tipo da Magia"
+                            variant="outlined"
+                            fullWidth margin="normal"
+                            value={typoMagia}
+                            onChange={(e) => setTypoMagia(e.target.value)}
+                        />
+
+
+                        <SCBtnSubmitCadastro variant="contained" size="large" type="submet" fullWidth >Cadastrar</SCBtnSubmitCadastro>
+                    </form>
                 </SCContainer>
             </>
         );
     }
 }
 
-
-
-
-
-
-
-export default Home;
+export default CadastrarMagia;

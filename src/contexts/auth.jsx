@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
             }
         )
-        if (password === "12345") {
+        if (password === "12345" && email === "admin@admin.com") {
             setUser(loggedUser);
             navigate('/');
         }

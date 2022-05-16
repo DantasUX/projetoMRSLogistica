@@ -8,8 +8,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { AiFillDelete } from 'react-icons/ai';
-import { AiFillInfoCircle } from 'react-icons/ai';
 
 
 
@@ -125,27 +123,12 @@ const SCMenuCard = styled(CardActions)`
     background-color: #A30201 ;
     color: #fff !important ;
     border-top: 5px solid #F9AA01 ;
-    display: flex ;
-    justify-content: flex-end ;
-    a{
-        text-decoration: none ;
-        color: #fff ;
-        display: flex ;
-        align-items: baseline ;
-
-        span{
-            margin-left: 5px ;
-        }
-    }
-    a:hover{
-        opacity: 0.5 ;
-    }
 
 
 `
 
 
-function Home() {
+function InfoMagia() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -187,7 +170,7 @@ function Home() {
                     <SCContainerMenu>
                         <h1>Grifinoria</h1>
                         <div>
-                            <SCBtnSubmit href="/magia">Cadastrar Magina</SCBtnSubmit>
+                            <SCBtnSubmit href="/home">Home</SCBtnSubmit>
                             <SCBtnSubmit onClick={handleLogout}>sair</SCBtnSubmit>
                         </div>
                     </SCContainerMenu>
@@ -197,22 +180,7 @@ function Home() {
                     <Divider />
                     <SCListCards>
 
-                        {items.map(item => (
-                            <SCCard sx={{ maxWidth: 345 }} key={item.id}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {item.name}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.type}
-                                    </Typography>
-                                </CardContent>
-                                <SCMenuCard>
-                                    <a size="small"><AiFillDelete /><span>Excluir</span></a>
-                                    <a size="small" href="/infoMagia"> <AiFillInfoCircle /><span>Informações</span></a>
-                                </SCMenuCard>
-                            </SCCard>
-                        ))}
+
                     </SCListCards>
                 </SCContainer>
             </>
@@ -226,4 +194,4 @@ function Home() {
 
 
 
-export default Home;
+export default InfoMagia;
