@@ -146,114 +146,114 @@ const SCMenuCard = styled(CardActions)`
 `;
 
 function Home() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
-  const { authenticated, logout } = useContext(AuthContext);
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [items, setItems] = useState([]);
+    const { authenticated, logout } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchSpells();
-  }, []);
+    useEffect(() => {
+        fetchSpells();
+    }, []);
 
-  const handleLogout = () => {
-    logout();
-  };
+    const handleLogout = () => {
+        logout();
+    };
 
-  async function handleDelete(id) {
-    setIsLoaded(false);
-    await deleteMagia(id);
-    await fetchSpells();
-  }
-
-  function deleteMagia(id) {
-    return axios.delete(
-      `https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells`,
-      {
-        headers: { "Content-Type": "application/json" },
-        data: { id },
-      }
-    );
-  }
-
-  async function getSpells() {
-    const { spells } = await fetch(
-      "https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells"
-    ).then((res) => res.json());
-
-    return spells.sort(function (a, b) {
-      //ordenando resultado
-      if (a.name < b.name) {
-        return -1;
-      } else {
-        return true;
-      }
-    });
-  }
-
-  async function fetchSpells() {
-    setIsLoaded(false);
-    try {
-      const spells = await getSpells();
-      setIsLoaded(true);
-      setItems(spells);
-    } catch (error) {
-      setIsLoaded(true);
-      setError(error);
+    async function handleDelete(id) {
+        setIsLoaded(false);
+        await deleteMagia(id);
+        await fetchSpells();
     }
-  }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
-    return <SCLoading>Loading...</SCLoading>;
-  } else {
-    return (
-      <>
-        <SCMenu>
-          <SCContainerMenu>
-            <h1>Grifinoria</h1>
-            <div>
-              <SCBtnSubmit href="/cadastrarMagia">Cadastrar Magina</SCBtnSubmit>
-              <SCBtnSubmit onClick={handleLogout}>sair</SCBtnSubmit>
-            </div>
-          </SCContainerMenu>
-        </SCMenu>
-        <SCContainer>
-          <h2> Lista de Magias</h2>
-          <Divider />
-          <SCListCards>
-            {items.map((item) => (
-              <SCCard sx={{ maxWidth: 345 }} key={item.id}>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {item.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {item.type}
-                  </Typography>
-                </CardContent>
-                <SCMenuCard>
-                  <a size="small" onClick={() => handleDelete(item.id)}>
-                    <AiFillDelete />
-                    <span>Excluir</span>
-                  </a>
-                  <Link size="small" to={`/spell/view/${item.id}`}>
-                    <AiFillInfoCircle />
-                    <span>Informações</span>
-                  </Link>
+    function deleteMagia(id) {
+        return axios.delete(
+            `https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells`,
+            {
+                headers: { "Content-Type": "application/json" },
+                data: { id },
+            }
+        );
+    }
 
-                  <Link size="small" to={`/spell/edit/${item.id}`}>
-                    <AiFillEdit />
-                    <span>Editar</span>
-                  </Link>
-                </SCMenuCard>
-              </SCCard>
-            ))}
-          </SCListCards>
-        </SCContainer>
-      </>
-    );
-  }
+    async function getSpells() {
+        const { spells } = await fetch(
+            "https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells"
+        ).then((res) => res.json());
+
+        return spells.sort(function (a, b) {
+            //ordenando resultado
+            if (a.name < b.name) {
+                return -1;
+            } else {
+                return true;
+            }
+        });
+    }
+
+    async function fetchSpells() {
+        setIsLoaded(false);
+        try {
+            const spells = await getSpells();
+            setIsLoaded(true);
+            setItems(spells);
+        } catch (error) {
+            setIsLoaded(true);
+            setError(error);
+        }
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+        return <SCLoading>Loading...</SCLoading>;
+    } else {
+        return (
+            <>
+                <SCMenu>
+                    <SCContainerMenu>
+                        <h1>Grifinoria</h1>
+                        <div>
+                            <SCBtnSubmit href="/cadastrarMagia">Cadastrar Magia</SCBtnSubmit>
+                            <SCBtnSubmit onClick={handleLogout}>sair</SCBtnSubmit>
+                        </div>
+                    </SCContainerMenu>
+                </SCMenu>
+                <SCContainer>
+                    <h2> Lista de Magias</h2>
+                    <Divider />
+                    <SCListCards>
+                        {items.map((item) => (
+                            <SCCard sx={{ maxWidth: 345 }} key={item.id}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {item.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.type}
+                                    </Typography>
+                                </CardContent>
+                                <SCMenuCard>
+                                    <a size="small" onClick={() => handleDelete(item.id)}>
+                                        <AiFillDelete />
+                                        <span>Excluir</span>
+                                    </a>
+                                    <Link size="small" to={`/spell/view/${item.id}`}>
+                                        <AiFillInfoCircle />
+                                        <span>Informações</span>
+                                    </Link>
+
+                                    <Link size="small" to={`/spell/edit/${item.id}`}>
+                                        <AiFillEdit />
+                                        <span>Editar</span>
+                                    </Link>
+                                </SCMenuCard>
+                            </SCCard>
+                        ))}
+                    </SCListCards>
+                </SCContainer>
+            </>
+        );
+    }
 }
 
 export default Home;
