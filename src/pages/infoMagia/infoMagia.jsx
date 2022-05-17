@@ -5,9 +5,12 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import { useParams } from "react-router-dom";
+import TextField from '@mui/material/TextField';
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+
 
 
 
@@ -28,13 +31,22 @@ const SCLoading = styled.div`
 	}
 
 `
-
 const SCContainer = styled(Container)`
     color: #fff ;
     padding: 2rem ;
     border-radius: 8px ;
-    background-color: rgba(0,0,0,0.5);
+    background-color: #fff;
+    color: #3B3B3B ;
     animation: go-back 2s;
+    display: flex !important;
+    align-items: center ;
+    flex-direction: column;
+    padding-bottom: 6rem !important;
+
+
+
+
+
     @media (max-width: 1280px){
         width: 85% !important;
     }
@@ -95,16 +107,6 @@ const SCListCards = styled.div`
     }
 
 `
-const SCCard = styled(Card)`
-    display: flex ;
-    flex-wrap: wrap ;
-    margin: 1rem 0 ;
-    color: #fff;
-    box-shadow: 0px 4px 10px -2px black !important;
-    width: 350px ;
-
-
-`
 const SCBtnSubmit = styled(Button)`
     height: 3rem !important;
     height: 3rem !important;
@@ -114,50 +116,72 @@ const SCBtnSubmit = styled(Button)`
     padding: 0 1rem !important;
 
     @media (max-width: 500px){
-        margin: 5px  !important;
+
     }
 
 `
-const SCMenuCard = styled(CardActions)`
-    width: 100% ;
-    background-color: #A30201 ;
-    color: #fff !important ;
-    border-top: 5px solid #F9AA01 ;
-
-
+const SCBtnFormulario = styled(SCBtnSubmit)`
+    margin: 0 !important;
+    margin-top: 1rem !important;
 `
 
 
 function InfoMagia() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [spell, setSpell] = useState({});
+    const [pagview, setPagView] = useState(true);
+
     const { authenticated, logout } = useContext(AuthContext);
+
+    const params = useParams();
+    const location = useLocation();
+
+    async function handleEdit() {
+        setIsLoaded(false);
+        await axios.put(`https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells`, {
+            id: spell.id,
+            name: spell.name,
+            type: spell.type,
+            version: spell.version
+        })
+        setIsLoaded(true);
+
+    }
+
+
+    useEffect(() => {
+        if (!location.pathname.includes('view')) {
+            setPagView(false);
+        }
+        else {
+            setPagView(true);
+        }
+
+        async function getSpell() {
+            axios.post(`https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells/findById`, {
+                id: params.id
+            })
+                .then(function (response) {
+                    setSpell(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+        }
+        getSpell();
+        setIsLoaded(true);
+
+    }, [])
 
     const handleLogout = () => {
         logout();
     }
 
-    useEffect(() => {
-        fetch("https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setItems(result.spells.sort(function (a, b) { //ordenando resultado
-                        if (a.name < b.name) {
-                            return -1;
-                        } else {
-                            return true;
-                        }
-                    }));
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
-    }, [])
+
+
+
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -176,10 +200,54 @@ function InfoMagia() {
                     </SCContainerMenu>
                 </SCMenu>
                 <SCContainer>
-                    <h2> Lista de Magias</h2>
+                    <h2> Magia Selecionada</h2>
                     <Divider />
                     <SCListCards>
+                        <form>
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                disabled
+                                type="text"
+                                name="id"
+                                id="id-magia"
+                                label="Id"
+                                variant="outlined"
+                                fullWidth margin="normal"
+                                value={spell.id}
+                                onChange={(e) => setSpell({ ...spell, id: e.target.value })}
+                            />
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                disabled={pagview}
+                                type="text"
+                                name="nome"
+                                id="nome-magia"
+                                label="Nome da Magia"
+                                variant="outlined"
+                                fullWidth margin="normal"
+                                value={spell.name}
+                                onChange={(e) => setSpell({ ...spell, name: e.target.value })}
+                            />
 
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                disabled={pagview}
+                                type="text"
+                                name="typeMagina"
+                                id="type-magia"
+                                label="Tipo da Magia"
+                                variant="outlined"
+                                fullWidth margin="normal"
+                                value={spell.type}
+
+                                onChange={(e) => setSpell({ ...spell, type: e.target.value })}
+                            />
+
+                            {!pagview ?
+                                <SCBtnFormulario variant="contained" size="large" onClick={() => handleEdit()} fullWidth >Editar</SCBtnFormulario>
+                                :
+                                null}
+                        </form>
 
                     </SCListCards>
                 </SCContainer>

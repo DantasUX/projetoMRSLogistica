@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../contexts/auth";
 import styled from 'styled-components'
@@ -10,6 +11,11 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { AiFillDelete } from 'react-icons/ai';
 import { AiFillInfoCircle } from 'react-icons/ai';
+import { AiFillEdit } from 'react-icons/ai';
+
+import axios from "axios";
+import { Link, Outlet } from "react-router-dom";
+import { height } from "@mui/system";
 
 
 
@@ -30,7 +36,6 @@ const SCLoading = styled.div`
 	}
 
 `
-
 const SCContainer = styled(Container)`
     color: #fff ;
     padding: 2rem ;
@@ -151,30 +156,56 @@ function Home() {
     const [items, setItems] = useState([]);
     const { authenticated, logout } = useContext(AuthContext);
 
+    useEffect(() => {
+        fetchSpells()
+    }, [])
+
     const handleLogout = () => {
         logout();
     }
 
-    useEffect(() => {
-        fetch("https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells")
+    async function handleDelete(id) {
+        setIsLoaded(false);
+        await deleteMagia(id);
+        await fetchSpells()
+
+    }
+
+    function deleteMagia(id) {
+        return axios.delete(`https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells`, {
+            headers: { 'Content-Type': 'application/json' },
+            data: { id }
+        })
+    }
+
+    async function getSpells() {
+        const { spells } = await fetch("https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells")
             .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setItems(result.spells.sort(function (a, b) { //ordenando resultado
-                        if (a.name < b.name) {
-                            return -1;
-                        } else {
-                            return true;
-                        }
-                    }));
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
-    }, [])
+
+        return spells.sort(function (a, b) { //ordenando resultado
+            if (a.name < b.name) {
+                return -1;
+            } else {
+                return true;
+            }
+        })
+
+    }
+
+    async function fetchSpells() {
+        setIsLoaded(false);
+        try {
+            const spells = await getSpells()
+            setIsLoaded(true);
+            setItems(spells);
+        } catch (error) {
+            setIsLoaded(true);
+            setError(error);
+        }
+    }
+
+
+
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -187,7 +218,7 @@ function Home() {
                     <SCContainerMenu>
                         <h1>Grifinoria</h1>
                         <div>
-                            <SCBtnSubmit href="/magia">Cadastrar Magina</SCBtnSubmit>
+                            <SCBtnSubmit href="/cadastrarMagia">Cadastrar Magina</SCBtnSubmit>
                             <SCBtnSubmit onClick={handleLogout}>sair</SCBtnSubmit>
                         </div>
                     </SCContainerMenu>
@@ -208,8 +239,17 @@ function Home() {
                                     </Typography>
                                 </CardContent>
                                 <SCMenuCard>
-                                    <a size="small"><AiFillDelete /><span>Excluir</span></a>
-                                    <a size="small" href="/infoMagia"> <AiFillInfoCircle /><span>Informações</span></a>
+                                    <a size="small" onClick={() => handleDelete(item.id)}><AiFillDelete /><span>Excluir</span></a>
+                                    <Link size="small" to={`/spell/view/${item.id}`}>
+                                        <AiFillInfoCircle /><span>Informações</span>
+
+                                    </Link>
+
+                                    <Link size="small" to={`/spell/edit/${item.id}`}>
+                                        <AiFillEdit /><span>Editar</span>
+
+                                    </Link>
+
                                 </SCMenuCard>
                             </SCCard>
                         ))}

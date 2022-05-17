@@ -82,9 +82,7 @@ function FormLogin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("submit", { email, password, register });
         login(email, password);
-
     }
 
     const registerSubmit = (event) => {

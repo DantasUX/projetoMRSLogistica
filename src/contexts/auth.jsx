@@ -19,13 +19,9 @@ export const AuthProvider = ({ children }) => {
         }
 
         setLoading(false);
-        console.log(listUser);
-
     }, []);
 
     const login = (email, password) => {
-        console.log("login auth", { email, password });
-
         const loggedUser = {
             id: "123",
             email,
@@ -50,21 +46,21 @@ export const AuthProvider = ({ children }) => {
 
     const cadastro = (email, nome, password) => {
         setListUser([...listUser, { email, nome, password }])
-        console.log(listUser)
+    };
+
+    const cadastroMagia = () => {
+        navigate("../");
     };
 
     const logout = () => {
-        console.log("logout");
-        //localStorage.removeItem('user');
         setUser(null);
         navigate("/login");
-
     };
 
 
     return (
         <AuthContext.Provider
-            value={{ authenticated: !!user, user, login, loading, logout, cadastro }}>
+            value={{ authenticated: !!user, user, login, loading, logout, cadastro, cadastroMagia }}>
             {children}
         </AuthContext.Provider>
 

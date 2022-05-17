@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
+import axios from 'axios';
+
 
 
 
@@ -25,19 +27,15 @@ const SCLoading = styled.div`
 	}
 
 `
-
 const SCContainer = styled(Container)`
+    color: #fff ;
     padding: 2rem ;
     border-radius: 8px ;
-    box-shadow: 0px 5px 14px -5px black;
-    background-color: #fff ;
-    margin-top: 10rem ;
-
+    background-color: #fff;
+    color: #3B3B3B ;
     animation: go-back 2s;
-
-
-    @media (max-width: 650px){
-        width: 80% !important;
+    @media (max-width: 1280px){
+        width: 85% !important;
     }
     @keyframes go-back {
     0% {
@@ -83,19 +81,6 @@ const SCContainerMenu = styled(Container)`
     }
 }
 `
-const SCListCards = styled.div`
-    display: flex ;
-    flex-wrap: wrap ;
-    justify-content: space-between ;
-
-    @media (max-width: 1280px){
-        justify-content: space-around !important;
-    }
-    @media (max-width: 1280px){
-        justify-content: space-between ;
-    }
-
-`
 const SCBtnSubmit = styled(Button)`
     height: 3rem !important;
     height: 3rem !important;
@@ -109,45 +94,47 @@ const SCBtnSubmit = styled(Button)`
     }
 
 `
-const SCBtnSubmitCadastro = styled(SCBtnSubmit)`
-    margin: 0 !important ;
-    margin-top: 2rem !important ;
-
+const SCBtnCadastrar = styled(SCBtnSubmit)`
+    margin: 0rem  !important;
+    margin-top: 2rem !important;
 `
+
 
 function CadastrarMagia() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
-    const { authenticated, logout } = useContext(AuthContext);
+    const { cadastroMagia, logout } = useContext(AuthContext);
 
     const [nomeMagia, setNomeMagia] = useState("");
-    const [typoMagia, setTypoMagia] = useState("");
+    const [tipoMagia, setTipoMagia] = useState("");
+
 
     const handleLogout = () => {
         logout();
     }
 
+    const PostMagia = async (event) => {
+
+        event.preventDefault();
+        const dadosMagia = {
+            "name": nomeMagia,
+            "type": tipoMagia
+        }
+        try {
+            const res = await axios.post('https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells', { ...dadosMagia });
+            alert("Magia cadastrada com sucesso");
+            cadastroMagia();
+            return res.data;
+
+        } catch (error) {
+            alert("Não foi possivel cadastrar a magia- Error: " + error);
+
+        }
+    }
     useEffect(() => {
-        fetch("https://9488e748.us-south.apigw.appdomain.cloud/api/v1/spells")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setItems(result.spells.sort(function (a, b) { //ordenando resultado
-                        if (a.name < b.name) {
-                            return -1;
-                        } else {
-                            return true;
-                        }
-                    }));
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
+        setIsLoaded(true);
     }, [])
+
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -160,39 +147,39 @@ function CadastrarMagia() {
                     <SCContainerMenu>
                         <h1>Grifinoria</h1>
                         <div>
-                            <SCBtnSubmit href="/home">Home</SCBtnSubmit>
+                            <SCBtnSubmit href="/">home</SCBtnSubmit>
                             <SCBtnSubmit onClick={handleLogout}>sair</SCBtnSubmit>
                         </div>
                     </SCContainerMenu>
                 </SCMenu>
                 <SCContainer maxWidth="sm">
-                    <h2> Cadastre Uma Magias</h2>
+                    <h2> Cadastre uma Magias</h2>
                     <Divider />
-                    <form >
-
+                    <form onSubmit={PostMagia}>
                         <TextField
                             type="text"
-                            name="user"
-                            id="eamil-registro"
+                            name="nomeMagia"
+                            id="nomeMagia"
                             label="Nome da Magia"
                             variant="outlined"
                             fullWidth margin="normal"
                             value={nomeMagia}
                             onChange={(e) => setNomeMagia(e.target.value)}
                         />
+
                         <TextField
-                            type="text"
-                            name="tipoMagina"
-                            id="nome-registro"
+                            type="pastextsword"
+                            name="tipoMagia "
+                            id="tipo-magia"
                             label="Tipo da Magia"
                             variant="outlined"
-                            fullWidth margin="normal"
-                            value={typoMagia}
-                            onChange={(e) => setTypoMagia(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            value={tipoMagia}
+                            onChange={(e) => setTipoMagia(e.target.value)}
                         />
 
-
-                        <SCBtnSubmitCadastro variant="contained" size="large" type="submet" fullWidth >Cadastrar</SCBtnSubmitCadastro>
+                        <SCBtnCadastrar variant="contained" size="large" type="submet" fullWidth >Cadastrar</SCBtnCadastrar>
                     </form>
                 </SCContainer>
             </>
@@ -200,4 +187,7 @@ function CadastrarMagia() {
     }
 }
 
+
 export default CadastrarMagia;
+
+

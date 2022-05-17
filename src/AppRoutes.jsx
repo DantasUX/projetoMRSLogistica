@@ -9,7 +9,7 @@ import {
 
 import Login from './pages/Login/Login'
 import Home from './pages/home/Home'
-import CadastrarMagia from './pages/cadastrarMagia/Magia'
+import CadastrarMagia from './pages/cadastrarMagia/cadastrarMagia'
 import InfoMagia from "./pages/infoMagia/infoMagia";
 
 import { AuthProvider, AuthContext } from './contexts/auth'
@@ -39,9 +39,15 @@ const AppRoutes = () => {
                     <Route exact path="/login" element={<Login />} />
                     <Route exact path="/" element={<Private><Home /></Private>} />
                     <Route exact path="/home" element={<Private><Home /></Private>} />
-                    <Route exact path="/magia" element={<Private><CadastrarMagia /></Private>} />
-                    <Route exact path="/infoMagia" element={<Private><InfoMagia /></Private>} />
+                    <Route exact path="/cadastrarMagia" element={<Private><CadastrarMagia /></Private>} />
 
+                    <Route exact path="/spell/view" element={<Private><InfoMagia /></Private>}>
+                        <Route path=":id" element={<Private><InfoMagia /></Private>} />
+                    </Route>
+
+                    <Route exact path="/spell/edit" element={<Private><InfoMagia /></Private>}>
+                        <Route path=":id" element={<Private><InfoMagia /></Private>} />
+                    </Route>
                 </Routes>
             </AuthProvider>
         </Router>
